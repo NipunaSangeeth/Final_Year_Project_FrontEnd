@@ -1179,105 +1179,126 @@
 
 // $$$$$$$$$$$$$$_________$$$$$$$$$$$$$
 
-const redisClient = require("../config/redis");
-const addCandidateTable = require("../models/addCandidatesModel");
+// const redisClient = require("../config/redis");
+// const addCandidateTable = require("../models/addCandidatesModel");
 
-const manageShowVoteCtrl = {
-  getshowvot: async (req, res) => {
-    const { decrypted_vote } = req.body;
+// const manageShowVoteCtrl = {
+//   getshowvot: async (req, res) => {
+//     const { decrypted_vote } = req.body;
 
-    console.log("\n🔵 ================================");
-    console.log(`📥 Incoming decrypted vote: ${decrypted_vote}`);
-    console.log("🔵 ================================");
+//     console.log("\n🔵 ================================");
+//     console.log(`📥 Incoming decrypted vote: ${decrypted_vote}`);
+//     console.log("🔵 ================================");
 
-    const part = decrypted_vote.split(":");
-    const voterRandomBits = part[0];
-    const candidateName = part[1];
+//     const part = decrypted_vote.split(":");
+//     const voterRandomBits = part[0];
+//     const candidateName = part[1];
 
-    if (!voterRandomBits || !candidateName) {
-      console.log("🚫 [Rejected] Invalid format: missing fields");
-      return res.status(400).json({ message: "🚫 Invalid Vote Format" });
+//     if (!voterRandomBits || !candidateName) {
+//       console.log("🚫 [Rejected] Invalid format: missing fields");
+//       return res.status(400).json({ message: "🚫 Invalid Vote Format" });
+//     }
+
+//     // Unique code check
+//     const codeKey = `voterRandomBits:${voterRandomBits}`;
+//     const setResult = await redisClient.set(codeKey, "1", {
+//       NX: true,
+//       EX: 86400,
+//     });
+
+//     if (setResult === null) {
+//       console.log(`🚫 [Rejected] Duplicate code: ${voterRandomBits}`);
+//       return res.status(400).json({
+//         message: "🚫 Duplicate vote code — vote rejected",
+//       });
+//     }
+
+//     // Validate candidate name
+//     const candidate = await addCandidateTable.findOne({
+//       candidate_name: candidateName,
+//     });
+
+//     if (!candidate) {
+//       console.log(`🚫 [Rejected] Invalid candidate name: ${candidateName}`);
+//       return res.status(400).json({
+//         message: "🚫 Invalid candidate name — vote rejected",
+//       });
+//     }
+
+//     // Build safe Redis key
+//     const safeCandidateName = candidateName.replace(/\s+/g, "_");
+//     const redisKey = `Votes:2025_president:${safeCandidateName}`;
+
+//     try {
+//       await redisClient.incr(redisKey);
+//       console.log(`✅ [Accepted] Vote COUNTED for: ${candidateName}`);
+//       return res.status(200).json({
+//         message: `☑️ Vote counted for: ${candidateName}`,
+//       });
+//     } catch (err) {
+//       console.error("❌ Redis increment failed:", err);
+//       return res.status(500).json({
+//         message: "Server error counting vote",
+//       });
+//     }
+//   },
+
+//   getVoteCounts: async (req, res) => {
+//     try {
+//       let cursor = "0";
+//       let keys = [];
+//       const pattern = "Votes:2025_president:*";
+
+//       do {
+//         const { cursor: nextCursor, keys: foundKeys } = await redisClient.scan(
+//           cursor,
+//           "MATCH",
+//           pattern,
+//           "COUNT",
+//           "100"
+//         );
+//         cursor = nextCursor;
+//         keys = keys.concat(foundKeys);
+//       } while (cursor !== "0");
+
+//       const results = {};
+//       for (const key of keys) {
+//         const count = await redisClient.get(key);
+//         results[key] = parseInt(count);
+//       }
+
+//       console.log("\n📊 ================================");
+//       console.log("📊 Current VALID vote counts:");
+//       console.log(results);
+//       console.log("📊 ================================");
+
+//       res.status(200).json(results);
+//     } catch (error) {
+//       console.error("❌ Failed to get vote counts", error);
+//       res.status(500).json({ message: "Failed to get vote counts 😕" });
+//     }
+//   },
+// };
+
+// module.exports = manageShowVoteCtrl;
+
+
+const fetchRejectedVotes = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:8000/api/rejected-vote-counts?electionId=2025_president"
+    );
+
+    console.log("🔍 Rejected Votes API Response:", res.data);
+
+    // Use the totalRejected field from backend
+    if (res.data && typeof res.data.totalRejected === "number") {
+      setRejectedCount(res.data.totalRejected);
+    } else {
+      console.warn("⚠️ Unexpected response format:", res.data);
     }
-
-    // Unique code check
-    const codeKey = `voterRandomBits:${voterRandomBits}`;
-    const setResult = await redisClient.set(codeKey, "1", {
-      NX: true,
-      EX: 86400,
-    });
-
-    if (setResult === null) {
-      console.log(`🚫 [Rejected] Duplicate code: ${voterRandomBits}`);
-      return res.status(400).json({
-        message: "🚫 Duplicate vote code — vote rejected",
-      });
-    }
-
-    // Validate candidate name
-    const candidate = await addCandidateTable.findOne({
-      candidate_name: candidateName,
-    });
-
-    if (!candidate) {
-      console.log(`🚫 [Rejected] Invalid candidate name: ${candidateName}`);
-      return res.status(400).json({
-        message: "🚫 Invalid candidate name — vote rejected",
-      });
-    }
-
-    // Build safe Redis key
-    const safeCandidateName = candidateName.replace(/\s+/g, "_");
-    const redisKey = `Votes:2025_president:${safeCandidateName}`;
-
-    try {
-      await redisClient.incr(redisKey);
-      console.log(`✅ [Accepted] Vote COUNTED for: ${candidateName}`);
-      return res.status(200).json({
-        message: `☑️ Vote counted for: ${candidateName}`,
-      });
-    } catch (err) {
-      console.error("❌ Redis increment failed:", err);
-      return res.status(500).json({
-        message: "Server error counting vote",
-      });
-    }
-  },
-
-  getVoteCounts: async (req, res) => {
-    try {
-      let cursor = "0";
-      let keys = [];
-      const pattern = "Votes:2025_president:*";
-
-      do {
-        const { cursor: nextCursor, keys: foundKeys } = await redisClient.scan(
-          cursor,
-          "MATCH",
-          pattern,
-          "COUNT",
-          "100"
-        );
-        cursor = nextCursor;
-        keys = keys.concat(foundKeys);
-      } while (cursor !== "0");
-
-      const results = {};
-      for (const key of keys) {
-        const count = await redisClient.get(key);
-        results[key] = parseInt(count);
-      }
-
-      console.log("\n📊 ================================");
-      console.log("📊 Current VALID vote counts:");
-      console.log(results);
-      console.log("📊 ================================");
-
-      res.status(200).json(results);
-    } catch (error) {
-      console.error("❌ Failed to get vote counts", error);
-      res.status(500).json({ message: "Failed to get vote counts 😕" });
-    }
-  },
+  } catch (err) {
+    console.error("❌ Failed to fetch rejected votes:", err.message);
+  }
 };
 
-module.exports = manageShowVoteCtrl;

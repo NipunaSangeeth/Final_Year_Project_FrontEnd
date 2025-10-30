@@ -1,10 +1,4 @@
-// import React from "react";
 
-// const CandidateDetails = () => {
-//   return <div>CandidateDetails</div>;
-// };
-
-// export default CandidateDetails;
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";

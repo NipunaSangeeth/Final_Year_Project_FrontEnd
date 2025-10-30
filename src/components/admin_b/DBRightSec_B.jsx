@@ -10,10 +10,12 @@ import {
   DBRightSideButtonADMIN_B,
   ElectionResult,
   PreElecResult,
+  PreviousPresidentElec,
   SisCandidateDetails,
   SisElectionResult,
 } from "../admin_b";
 import { Route, Routes } from "react-router-dom";
+import PreElecResultButtons from "./PreElecResultButtons";
 
 const DBRightSec_B = () => {
   return (
@@ -27,11 +29,30 @@ const DBRightSec_B = () => {
           <Route path="/dashboard_B" element={<Dashboard_B />} />
           <Route path="/create-election" element={<CreateElection />} />
 
-          <Route path="/pre-elec-result" element={<PreElecResult />} />
+
+          {/* <Route path="/pre-elec-result">
+          <Route index element={<PreElecResultButtons/>}/>
+          <Route path="/president" element={<PreviousPresidentElec/>}/>
+          </Route> */}
+
+{/* 🟩 Previous Election Results Section */}
+          <Route path="/pre-elec-result">
+            <Route index element={<PreElecResultButtons />} />
+            <Route
+              path="president"
+              element={<PreviousPresidentElec />}
+            />
+            {/* Optional: future SIS election page */}
+            {/* <Route path="sis" element={<PreviousSisElec />} /> */}
+          </Route>
+
+
+          {/* <Route path="/pre-elec-result" element={<PreElecResult />} />
+          <Route path="/Previous-President-Elec" element={<PreviousPresidentElec/>}/>
           <Route
             path="/sis-candidates-details"
             element={<SisCandidateDetails />}
-          />
+          /> */}
 
           {/* Create Election Routes */}
           <Route path="rightSideButton-ADMIN_B">

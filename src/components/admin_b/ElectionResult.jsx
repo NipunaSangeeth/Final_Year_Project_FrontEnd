@@ -137,7 +137,9 @@ const ElectionResult = () => {
         <h1 className="text-5xl font-bold text-white mb-2">
           President Election Results
         </h1>
-        <p className="text-orange-300 mb-8 text-3xl">Successfuly Cated Votes -  {totalVotes}</p>
+        <p className="text-orange-300 mb-8 text-3xl">
+          Successfuly Cated Votes - {totalVotes}
+        </p>
         {/* Rejected Votes Count */}
         <p className="text-red-600 font-semibold mb-6 text-2xl">
           Rejected Votes: {rejectedCount}
@@ -268,3 +270,5 @@ const ElectionResult = () => {
 };
 
 export default ElectionResult;
+//____________________________________________
+
