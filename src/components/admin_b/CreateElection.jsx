@@ -1,350 +1,460 @@
-
-// import React, { useState } from "react";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import { DatePicker, TimePicker } from "@mui/x-date-pickers";
-// import {
-//   MenuItem,
-//   Select,
-//   FormControl,
-//   InputLabel,
-//   Button,
-//   Typography,
-// } from "@mui/material";
-// import dayjs from "dayjs";
-// import axios from "axios";
-
-// const createElectionCtrl = async () => {
-//   // -------------------------------
-//   // 🧠 State Management
-//   // -------------------------------
-//   const [electionType, setElectionType] = useState("");
-//   const [nominationStartDate, setNominationStartDate] = useState(null);
-//   const [nominationEndDate, setNominationEndDate] = useState(null);
-//   const [nominationStartTime, setNominationStartTime] = useState(null);
-//   const [nominationEndTime, setNominationEndTime] = useState(null);
-
-//   const [delayBeforeStart, setDelayBeforeStart] = useState(""); // e.g. 10min, 1h, etc.
-
-//   const [electionStartDate, setElectionStartDate] = useState(null);
-//   const [electionEndDate, setElectionEndDate] = useState(null);
-//   const [electionStartTime, setElectionStartTime] = useState(null);
-//   const [electionEndTime, setElectionEndTime] = useState(null);
-
-//   // -------------------------------
-//   // 🧩 Handle Form Submit
-//   // -------------------------------
-
-//   const handleStartElection = (e) => {
-//     e.preventDefault();
-
-//     console.log("Election Config Data:", {
-//       electionType,
-//       nominationStartDate: nominationStartDate?.format("YYYY-MM-DD"),
-//       nominationStartTime: nominationStartTime?.format("HH:mm:ss"),
-//       nominationEndDate: nominationEndDate?.format("YYYY-MM-DD"),
-//       nominationEndTime: nominationEndTime?.format("HH:mm:ss"),
-//       delayBeforeStart,
-//       electionStartDate: electionStartDate?.format("YYYY-MM-DD"),
-//       electionStartTime: electionStartTime?.format("HH:mm:ss"),
-//       electionEndDate: electionEndDate?.format("YYYY-MM-DD"),
-//       electionEndTime: electionEndTime?.format("HH:mm:ss"),
-//     });
-
-//     alert("Election configuration logged successfully!");
-//   };
-//   const body = {
-//     electionType,
-//     nominationStartDate: nominationStartDate?.format("YYYY-MM-DD"),
-//     nominationStartTime: nominationStartTime?.format("HH:mm:ss"),
-//     nominationEndDate: nominationEndDate?.format("YYYY-MM-DD"),
-//     nominationEndTime: nominationEndTime?.format("HH:mm:ss"),
-//     delayBeforeStart, // string like "10min"
-//     electionStartDate: electionStartDate?.format("YYYY-MM-DD"),
-//     electionStartTime: electionStartTime?.format("HH:mm:ss"),
-//     electionEndDate: electionEndDate?.format("YYYY-MM-DD"),
-//     electionEndTime: electionEndTime?.format("HH:mm:ss"),
-//     createdBy: "admin", // optional
-//   };
-
-//   try {
-//     const res = await axios.post("/api/create-election", body);
-//     console.log("Create election response:", res.data);
-//     // show toast or success UI
-//   } catch (err) {
-//     console.error("Failed to create election", err);
-//     // show error UI
-//   }
-
-//   return (
-//     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-emerald-900 to-emerald-100 py-10">
-//       <div className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-3xl">
-//         <Typography
-//           variant="h4"
-//           align="center"
-//           className="font-bold text-emerald-800 mb-10"
-//         >
-//           🗳️ Create Election
-//         </Typography>
-
-//         <form
-//           onSubmit={handleStartElection}
-//           className="flex flex-col gap-10 text-black"
-//         >
-//           {/* Election Type */}
-//           <FormControl fullWidth>
-//             <InputLabel>Election Type</InputLabel>
-//             <Select
-//               value={electionType}
-//               onChange={(e) => setElectionType(e.target.value)}
-//               className="bg-gray-100 rounded-lg"
-//               required
-//             >
-//               <MenuItem value="president">President Election</MenuItem>
-//               <MenuItem value="sis">SIS Election</MenuItem>
-//             </Select>
-//           </FormControl>
-
-//           {/* Nomination Period */}
-//           <div>
-//             <h2 className="text-xl font-semibold text-emerald-700 mb-4 text-center">
-//               🧾 Nomination Period
-//             </h2>
-//             <div className="grid grid-cols-2 gap-6">
-//               <LocalizationProvider dateAdapter={AdapterDayjs}>
-//                 <DatePicker
-//                   label="Nomination Start Date"
-//                   value={nominationStartDate}
-//                   onChange={setNominationStartDate}
-//                   className="bg-gray-100"
-//                 />
-//                 <DatePicker
-//                   label="Nomination End Date"
-//                   value={nominationEndDate}
-//                   onChange={setNominationEndDate}
-//                   className="bg-gray-100"
-//                 />
-//                 <TimePicker
-//                   label="Start Time"
-//                   value={nominationStartTime}
-//                   onChange={setNominationStartTime}
-//                 />
-//                 <TimePicker
-//                   label="End Time"
-//                   value={nominationEndTime}
-//                   onChange={setNominationEndTime}
-//                 />
-//               </LocalizationProvider>
-//             </div>
-//           </div>
-
-//           {/* Delay Selector */}
-//           <div>
-//             <h2 className="text-xl font-semibold text-emerald-700 mb-4 text-center">
-//               ⏳ Start Election Delay
-//             </h2>
-//             <FormControl fullWidth>
-//               <InputLabel>Delay Before Election Start</InputLabel>
-//               <Select
-//                 value={delayBeforeStart}
-//                 onChange={(e) => setDelayBeforeStart(e.target.value)}
-//                 className="bg-gray-100 rounded-lg"
-//                 required
-//               >
-//                 <MenuItem value="10min">10 Minutes</MenuItem>
-//                 <MenuItem value="30min">30 Minutes</MenuItem>
-//                 <MenuItem value="1h">1 Hour</MenuItem>
-//                 <MenuItem value="2h">2 Hours</MenuItem>
-//                 <MenuItem value="6h">6 Hours</MenuItem>
-//                 <MenuItem value="12h">12 Hours</MenuItem>
-//                 <MenuItem value="24h">24 Hours</MenuItem>
-//               </Select>
-//             </FormControl>
-//           </div>
-
-//           {/* Election Period */}
-//           <div>
-//             <h2 className="text-xl font-semibold text-emerald-700 mb-4 text-center">
-//               🗳️ Election Period
-//             </h2>
-//             <div className="grid grid-cols-2 gap-6">
-//               <LocalizationProvider dateAdapter={AdapterDayjs}>
-//                 <DatePicker
-//                   label="Election Start Date"
-//                   value={electionStartDate}
-//                   onChange={setElectionStartDate}
-//                 />
-//                 <DatePicker
-//                   label="Election End Date"
-//                   value={electionEndDate}
-//                   onChange={setElectionEndDate}
-//                 />
-//                 <TimePicker
-//                   label="Start Time"
-//                   value={electionStartTime}
-//                   onChange={setElectionStartTime}
-//                 />
-//                 <TimePicker
-//                   label="End Time"
-//                   value={electionEndTime}
-//                   onChange={setElectionEndTime}
-//                 />
-//               </LocalizationProvider>
-//             </div>
-//           </div>
-
-//           {/* Submit */}
-//           <div className="flex justify-center mt-8">
-//             <Button
-//               type="submit"
-//               variant="contained"
-//               className="bg-emerald-700 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg text-lg"
-//             >
-//               Start Election
-//             </Button>
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default createElectionCtrl;
-
-// @@@@@@@@@@@@@@@@@@@@@@@@
-
-import React, { useState } from "react";
-import axios from "axios";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker, TimePicker } from "@mui/x-date-pickers";
-import {
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Button,
-  Typography,
-} from "@mui/material";
+//#############################___2025/11/09___##################################
+import React, { useEffect, useState, useRef } from "react";
 import dayjs from "dayjs";
+import axios from "axios";
 
-const CreateElection = () => {
-  const [electionType, setElectionType] = useState("");
-  const [nominationStartDate, setNominationStartDate] = useState(null);
-  const [nominationEndDate, setNominationEndDate] = useState(null);
-  const [nominationStartTime, setNominationStartTime] = useState(null);
-  const [nominationEndTime, setNominationEndTime] = useState(null);
-  const [delayBeforeStart, setDelayBeforeStart] = useState("");
-  const [electionStartDate, setElectionStartDate] = useState(null);
-  const [electionEndDate, setElectionEndDate] = useState(null);
-  const [electionStartTime, setElectionStartTime] = useState(null);
-  const [electionEndTime, setElectionEndTime] = useState(null);
+const DELAYS = [
+  { label: "5 minutes", value: "5min", minutes: 5 },
+  { label: "10 minutes", value: "10min", minutes: 10 },
+  { label: "30 minutes", value: "30min", minutes: 30 },
+  { label: "1 hour", value: "1h", minutes: 60 },
+  { label: "2 hours", value: "2h", minutes: 120 },
+  { label: "24 hours", value: "24h", minutes: 1440 },
+];
 
-  const handleStartElection = async (e) => {
-    e.preventDefault();
+function formatSecondsToHMS(totalSeconds) {
+  if (!totalSeconds || totalSeconds <= 0) return "00:00:00";
+  const s = Math.floor(totalSeconds % 60);
+  const m = Math.floor((totalSeconds / 60) % 60);
+  const h = Math.floor(totalSeconds / 3600);
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
 
-    const data = {
-      electionType,
-      nominationStartDate: nominationStartDate?.format("YYYY-MM-DD"),
-      nominationStartTime: nominationStartTime?.format("HH:mm:ss"),
-      nominationEndDate: nominationEndDate?.format("YYYY-MM-DD"),
-      nominationEndTime: nominationEndTime?.format("HH:mm:ss"),
-      delayBeforeStart,
-      electionStartDate: electionStartDate?.format("YYYY-MM-DD"),
-      electionStartTime: electionStartTime?.format("HH:mm:ss"),
-      electionEndDate: electionEndDate?.format("YYYY-MM-DD"),
-      electionEndTime: electionEndTime?.format("HH:mm:ss"),
-    };
+export default function CreateElection() {
+  const [form, setForm] = useState({
+    electionType: "",
+    nominationStartAt: "",
+    nominationEndAt: "",
+    delayBeforeStart: "",
+    electionStartAt: "",
+    electionEndAt: "",
+  });
 
+  const [errors, setErrors] = useState({});
+  const [serverStatus, setServerStatus] = useState(null);
+  const [statusLoading, setStatusLoading] = useState(false);
+  const [nomCountdown, setNomCountdown] = useState(0);
+  const [delayCountdown, setDelayCountdown] = useState(0);
+  const [elecCountdown, setElecCountdown] = useState(0);
+  const [activeMsg, setActiveMsg] = useState("");
+
+  const pollRef = useRef(null);
+  const tickRef = useRef(null);
+
+  const fetchStatus = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/api/create-election", data);
-      console.log("✅ Election Created:", res.data);
-      alert("Election created successfully!");
-    } catch (error) {
-      console.error("❌ Error creating election:", error);
-      alert("Failed to create election!");
+      setStatusLoading(true);
+      const res = await axios.get("http://localhost:8000/api/election-status");
+      if (res.data && res.data.success) {
+        setServerStatus(res.data.data);
+      } else {
+        setServerStatus(null);
+      }
+    } catch (err) {
+      console.error("Failed to fetch election status:", err.message || err);
+    } finally {
+      setStatusLoading(false);
     }
   };
 
+  // instant 1s backend polling
+  useEffect(() => {
+    fetchStatus();
+    pollRef.current = setInterval(fetchStatus, 1000);
+    return () => clearInterval(pollRef.current);
+  }, []);
+
+  // auto fill electionStartAt
+  useEffect(() => {
+    const { nominationEndAt, delayBeforeStart } = form;
+    if (nominationEndAt && delayBeforeStart) {
+      const d = DELAYS.find((x) => x.value === delayBeforeStart);
+      const suggested = dayjs(nominationEndAt).add(d ? d.minutes : 0, "minute");
+      setForm((prev) => ({
+        ...prev,
+        electionStartAt: suggested.format("YYYY-MM-DDTHH:mm"),
+      }));
+    }
+  }, [form.nominationEndAt, form.delayBeforeStart]);
+
+  const validate = () => {
+    const e = {};
+    const {
+      electionType,
+      nominationStartAt,
+      nominationEndAt,
+      delayBeforeStart,
+      electionStartAt,
+      electionEndAt,
+    } = form;
+    if (!electionType) e.electionType = "Choose election type.";
+    if (!nominationStartAt) e.nominationStartAt = "Nomination start required.";
+    if (!nominationEndAt) e.nominationEndAt = "Nomination end required.";
+    if (!delayBeforeStart) e.delayBeforeStart = "Select delay.";
+    if (!electionStartAt) e.electionStartAt = "Election start required.";
+    if (!electionEndAt) e.electionEndAt = "Election end required.";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSubmit = async (ev) => {
+    ev.preventDefault();
+    if (!validate()) return;
+
+    const payload = {
+      electionType: form.electionType,
+      nominationStartAt: dayjs(form.nominationStartAt).toISOString(),
+      nominationEndAt: dayjs(form.nominationEndAt).toISOString(),
+      delayBeforeStart: form.delayBeforeStart,
+      electionStartAt: dayjs(form.electionStartAt).toISOString(),
+      electionEndAt: dayjs(form.electionEndAt).toISOString(),
+    };
+
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/api/create-election",
+        payload
+      );
+      if (res.data && res.data.success) {
+        setForm({
+          electionType: "",
+          nominationStartAt: "",
+          nominationEndAt: "",
+          delayBeforeStart: "",
+          electionStartAt: "",
+          electionEndAt: "",
+        });
+        fetchStatus();
+      } else {
+        console.error("Create failed:", res.data?.message || res.data);
+      }
+    } catch (err) {
+      console.error(
+        "Create election error:",
+        err.response?.data || err.message
+      );
+    }
+  };
+
+  const isFormDisabled = () => {
+    if (!serverStatus) return false;
+    return serverStatus.status && serverStatus.status !== "completed";
+  };
+
+  // countdown tick logic
+  useEffect(() => {
+    function tick() {
+      const now = dayjs();
+      if (!serverStatus) return;
+      const ns = dayjs(serverStatus.nominationStartAt);
+      const ne = dayjs(serverStatus.nominationEndAt);
+      const es = dayjs(serverStatus.electionStartAt);
+      const ee = dayjs(serverStatus.electionEndAt);
+
+      // nomination countdown runs only between start & end
+      if (now.isAfter(ns) && now.isBefore(ne))
+        setNomCountdown(Math.max(0, ne.diff(now, "second")));
+      else setNomCountdown(0);
+
+      if (now.isAfter(ne) && now.isBefore(es))
+        setDelayCountdown(Math.max(0, es.diff(now, "second")));
+      else setDelayCountdown(0);
+
+      if (now.isAfter(es) && now.isBefore(ee))
+        setElecCountdown(Math.max(0, ee.diff(now, "second")));
+      else setElecCountdown(0);
+    }
+
+    tickRef.current = setInterval(tick, 1000);
+    tick();
+    return () => clearInterval(tickRef.current);
+  }, [serverStatus]);
+
+  // active election message logic
+  useEffect(() => {
+    if (serverStatus?.status && serverStatus.status !== "completed") {
+      setActiveMsg(
+        "⚠️ You can’t create another election until the current one ends."
+      );
+    } else {
+      setActiveMsg("");
+    }
+  }, [serverStatus?.status]);
+
+  const active = serverStatus?.status || null;
+  const getBox = (label, isActive, gradient, textColor) => (
+    <div
+      className={`w-1/4 text-center rounded-full px-4 py-2 shadow font-semibold ${
+        isActive
+          ? `${gradient} ${textColor}`
+          : "bg-white text-gray-600 border border-gray-300"
+      }`}
+    >
+      {label}
+    </div>
+  );
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-emerald-900 to-emerald-100 py-10">
-      <div className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-3xl">
-        <Typography variant="h4" align="center" className="font-bold text-emerald-800 mb-10">
-          🗳️ Create Election
-        </Typography>
-
-        <form onSubmit={handleStartElection} className="flex flex-col gap-10 text-black">
-          {/* Election Type */}
-          <FormControl fullWidth>
-            <InputLabel>Election Type</InputLabel>
-            <Select
-              value={electionType}
-              onChange={(e) => setElectionType(e.target.value)}
-              className="bg-gray-100 rounded-lg"
-              required
-            >
-              <MenuItem value="president">President Election</MenuItem>
-              <MenuItem value="sis">SIS Election</MenuItem>
-            </Select>
-          </FormControl>
-
-          {/* Nomination Period */}
-          <div>
-            <h2 className="text-xl font-semibold text-emerald-700 mb-4 text-center">🧾 Nomination Period</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker label="Nomination Start Date" value={nominationStartDate} onChange={setNominationStartDate} />
-                <DatePicker label="Nomination End Date" value={nominationEndDate} onChange={setNominationEndDate} />
-                <TimePicker label="Start Time" value={nominationStartTime} onChange={setNominationStartTime} />
-                <TimePicker label="End Time" value={nominationEndTime} onChange={setNominationEndTime} />
-              </LocalizationProvider>
-            </div>
+    <div className="min-h-screen bg-gradient-to-b from-green-100/60 to-white py-8 px-6">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* LEFT */}
+        <div className="bg-white rounded-xl p-8 shadow-md">
+          <div className="text-center mb-6">
+            <h1 className="text-4xl font-extrabold">
+              Create Election <span>🗳️</span>
+            </h1>
           </div>
 
-          {/* Delay Selector */}
-          <div>
-            <h2 className="text-xl font-semibold text-emerald-700 mb-4 text-center">⏳ Start Election Delay</h2>
-            <FormControl fullWidth>
-              <InputLabel>Delay Before Election Start</InputLabel>
-              <Select
-                value={delayBeforeStart}
-                onChange={(e) => setDelayBeforeStart(e.target.value)}
-                className="bg-gray-100 rounded-lg"
-                required
+          <div className="space-y-6">
+            <div className="bg-gray-100 rounded-md p-4">
+              <label className="text-lg font-semibold block mb-2">
+                Election Type
+              </label>
+              <select
+                value={form.electionType}
+                onChange={(e) =>
+                  setForm({ ...form, electionType: e.target.value })
+                }
+                className="w-full rounded-md p-3 bg-gray-200 border-none"
+                disabled={isFormDisabled()}
               >
-                <MenuItem value="10min">10 Minutes</MenuItem>
-                <MenuItem value="30min">30 Minutes</MenuItem>
-                <MenuItem value="1h">1 Hour</MenuItem>
-                <MenuItem value="24h">24 Hours</MenuItem>
-              </Select>
-            </FormControl>
+                <option value="">Select Election Type</option>
+                <option value="president">President</option>
+                <option value="sis">SIS Election</option>
+              </select>
+            </div>
+
+            <h2 className="text-2xl font-bold text-center my-4">
+              Set The Nomination Period
+            </h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Nomination Start Date & Time
+                </label>
+                <input
+                  type="datetime-local"
+                  value={form.nominationStartAt}
+                  onChange={(e) =>
+                    setForm({ ...form, nominationStartAt: e.target.value })
+                  }
+                  className="w-full rounded-md p-3 bg-gray-100"
+                  disabled={isFormDisabled()}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Nomination End Date & Time
+                </label>
+                <input
+                  type="datetime-local"
+                  value={form.nominationEndAt}
+                  onChange={(e) =>
+                    setForm({ ...form, nominationEndAt: e.target.value })
+                  }
+                  className="w-full rounded-md p-3 bg-gray-100"
+                  disabled={isFormDisabled()}
+                />
+              </div>
+            </div>
+
+            <div className="text-center">
+              <h3 className="text-xl font-semibold my-3">Election Delay</h3>
+              <select
+                value={form.delayBeforeStart}
+                onChange={(e) =>
+                  setForm({ ...form, delayBeforeStart: e.target.value })
+                }
+                className="rounded-md p-3 bg-gray-200 w-1/2"
+                disabled={isFormDisabled()}
+              >
+                <option value="">Delay Before Election</option>
+                {DELAYS.map((d) => (
+                  <option key={d.value} value={d.value}>
+                    {d.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <h2 className="text-2xl font-bold text-center my-4">
+              Set The Election Period
+            </h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Election Start Date & Time
+                </label>
+                <input
+                  type="datetime-local"
+                  value={form.electionStartAt}
+                  onChange={(e) =>
+                    setForm({ ...form, electionStartAt: e.target.value })
+                  }
+                  className="w-full rounded-md p-3 bg-gray-100"
+                  disabled={isFormDisabled()}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Election End Date & Time
+                </label>
+                <input
+                  type="datetime-local"
+                  value={form.electionEndAt}
+                  onChange={(e) =>
+                    setForm({ ...form, electionEndAt: e.target.value })
+                  }
+                  className="w-full rounded-md p-3 bg-gray-100"
+                  disabled={isFormDisabled()}
+                />
+              </div>
+            </div>
+
+            <div className="text-center pt-6">
+              <button
+                onClick={handleSubmit}
+                disabled={isFormDisabled()}
+                className={`px-8 py-3 rounded-full text-white font-bold text-lg shadow-lg ${
+                  isFormDisabled()
+                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                    : "bg-[#6d4bde] hover:bg-[#593bd1]"
+                }`}
+              >
+                Start Election
+              </button>
+
+              {/* Message under button */}
+              {activeMsg && (
+                <p className="text-red-600 font-medium mt-3 text-sm">
+                  {activeMsg}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT SIDE */}
+        <div className="bg-white rounded-xl p-6 shadow-md">
+          <h2 className="text-3xl font-extrabold text-center mb-4">
+            Count Down Timers
+          </h2>
+
+          <div className="grid grid-cols-3 gap-4 mb-4">
+            {[
+              { time: nomCountdown, label: "Nomination phase Ending..." },
+              { time: delayCountdown, label: "Delay Time Ending.." },
+              { time: elecCountdown, label: "Election Phase Ending.." },
+            ].map((x, i) => (
+              <div key={i} className="bg-gray-100 rounded-md p-4 text-center">
+                <div className="text-2xl font-mono bg-white text-black rounded-md px-3 py-2 inline-block shadow-sm">
+                  {formatSecondsToHMS(x.time)}
+                </div>
+                <div className="mt-2 text-sm font-medium">{x.label}</div>
+              </div>
+            ))}
           </div>
 
-          {/* Election Period */}
-          <div>
-            <h2 className="text-xl font-semibold text-emerald-700 mb-4 text-center">🗳️ Election Period</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker label="Election Start Date" value={electionStartDate} onChange={setElectionStartDate} />
-                <DatePicker label="Election End Date" value={electionEndDate} onChange={setElectionEndDate} />
-                <TimePicker label="Start Time" value={electionStartTime} onChange={setElectionStartTime} />
-                <TimePicker label="End Time" value={electionEndTime} onChange={setElectionEndTime} />
-              </LocalizationProvider>
+          <div className="border-t border-b py-4 mb-4">
+            <h3 className="text-xl font-semibold text-center mb-3">
+              Indicators
+            </h3>
+            <div className="flex justify-between items-center gap-3">
+              {getBox(
+                "Now In Nomination",
+                active === "nomination",
+                "bg-gradient-to-r from-blue-600 to-blue-800",
+                "text-white"
+              )}
+              {getBox(
+                "Now In Delay",
+                active === "waiting",
+                "bg-gradient-to-r from-yellow-600 to-amber-800",
+                "text-black"
+              )}
+              {getBox(
+                "Now In Election",
+                active === "running",
+                "bg-gradient-to-r from-green-400 to-green-800",
+                "text-white"
+              )}
+              {getBox(
+                "Ending The Election",
+                active === "completed",
+                "bg-gradient-to-r from-purple-600 to-violet-800",
+                "text-white"
+              )}
             </div>
           </div>
 
-          <div className="flex justify-center mt-8">
-            <Button type="submit" variant="contained" className="bg-emerald-700 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg text-lg">
-              Start Election
-            </Button>
+          <div className="mb-4">
+            <h3 className="text-2xl font-bold text-center mb-3">
+              Current Election Status
+            </h3>
+            <div className="bg-white p-4 rounded-md shadow-inner min-h-[160px]">
+              {statusLoading ? (
+                <p className="text-sm text-gray-500">Loading status...</p>
+              ) : serverStatus ? (
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <strong>Type:</strong> {serverStatus.electionType}
+                  </div>
+                  <div>
+                    <strong>Nomination:</strong>{" "}
+                    {dayjs(serverStatus.nominationStartAt).format(
+                      "YYYY/MM/DD hh:mm A"
+                    )}{" "}
+                    -{" "}
+                    {dayjs(serverStatus.nominationEndAt).format(
+                      "YYYY/MM/DD hh:mm A"
+                    )}
+                  </div>
+                  <div>
+                    <strong>Delay:</strong> {serverStatus.delayBeforeStart}
+                  </div>
+                  <div>
+                    <strong>Election:</strong>{" "}
+                    {dayjs(serverStatus.electionStartAt).format(
+                      "YYYY/MM/DD hh:mm A"
+                    )}{" "}
+                    -{" "}
+                    {dayjs(serverStatus.electionEndAt).format(
+                      "YYYY/MM/DD hh:mm A"
+                    )}
+                  </div>
+                  <div>
+                    <strong>Current status:</strong> {serverStatus.status}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">
+                  No active election. Create a new one using the form.
+                </p>
+              )}
+            </div>
+
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={fetchStatus}
+                className="px-6 py-2 rounded-full bg-[#6d4bde] text-white font-semibold shadow hover:bg-[#593bd1]"
+              >
+                Refresh status
+              </button>
+            </div>
           </div>
-        </form>
+
+          <div>
+            <h4 className="text-lg font-semibold mb-2">Indicator Guide</h4>
+            <ul className="list-disc list-inside text-sm space-y-1">
+              <li>Nomination Open (blue)</li>
+              <li>Nomination Closed / Waiting (gold)</li>
+              <li>Election Running (green)</li>
+              <li>Election Completed (purple)</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
-};
-
-export default CreateElection;
-
-
-/// %%%%%%%%%%%%%%%%%%%%%%%%%
+}
