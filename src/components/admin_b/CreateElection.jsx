@@ -1,4 +1,3 @@
-
 // CreateElection.jsx (Final Polished Production Version)
 import React, { useEffect, useState, useRef } from "react";
 import dayjs from "dayjs";
@@ -6,6 +5,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 
 const DELAYS = [
+  { label: "2 minutes", value: "2min", minutes: 2 },
   { label: "5 minutes", value: "5min", minutes: 5 },
   { label: "10 minutes", value: "10min", minutes: 10 },
   { label: "30 minutes", value: "30min", minutes: 30 },
@@ -362,7 +362,10 @@ export default function CreateElection() {
               { time: delayCountdown, label: "Delay Time Ending.." },
               { time: elecCountdown, label: "Election Phase Ending.." },
             ].map((x, i) => (
-              <div key={i} className="bg-gray-200 rounded-md border-2 border-indigo-600 p-4 text-center">
+              <div
+                key={i}
+                className="bg-gray-200 rounded-md border-2 border-indigo-600 p-4 text-center"
+              >
                 <div className="flex flex-col justify-center items-center text-2xl font-mono bg-white text-black rounded-md px-3 py-2  shadow-sm">
                   {formatSecondsToHMS(x.time)}
                 </div>

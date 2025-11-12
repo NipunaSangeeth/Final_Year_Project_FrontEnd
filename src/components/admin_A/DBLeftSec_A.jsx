@@ -1,12 +1,14 @@
+
+//____________________2025/11/12________________
+
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import  {useElectionStatus}  from "../../hooks/useElectionStatus";
 
 const DBLeftSec_A = () => {
-  //   return <div>DBLeftSec_A</div>;
-
   const [activeLink, setActiveLink] = useState("");
-
   const navigate = useNavigate();
+  const { isNominationPeriod, isIdle } = useElectionStatus();
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
@@ -17,15 +19,18 @@ const DBLeftSec_A = () => {
       <hr className="mt-28 " />
       <ul className="flex flex-col gap-44 mt-36 mb-auto">
         <NavLink
-          to={"/dashboard_A/rightButtonSec"}
-          className={`flex items-center justify-center p-2 font-semibold rounded py-4 cursor-pointer ${
+          to={isNominationPeriod ? "/dashboard_A/rightButtonSec" : "#"}
+          className={`flex items-center justify-center p-2 font-semibold rounded py-4 cursor-pointer text-white ${
             activeLink === "/dashboard_A/rightButtonSec"
               ? "bg-emerald-950"
               : "bg-emerald-800"
-          } text-white hover:bg-emerald-950`}
-          onClick={() => handleLinkClick("/dashboard_A/rightButtonSec")}
+          } ${!isNominationPeriod ? "opacity-50 cursor-not-allowed hover:none" : "hover:bg-emerald-950"}`}
+          onClick={() =>
+            isNominationPeriod && handleLinkClick("/dashboard_A/rightButtonSec")
+          }
+          disabled={!isNominationPeriod}
         >
-          <span>ADD</span>
+          <span>ADD Voters</span>
         </NavLink>
 
         <NavLink
@@ -39,6 +44,7 @@ const DBLeftSec_A = () => {
         >
           <span>View Voter Details</span>
         </NavLink>
+
         <button
           onClick={() => navigate("/admin")}
           className="bg-orange-600 hover:bg-orange-500 text-white py-2 px-4 rounded mt-8"
@@ -48,23 +54,6 @@ const DBLeftSec_A = () => {
       </ul>
     </div>
   );
-
-  // this is the normal one//   return (
-  //     <div className="w-1/3 h-full bg-gradient-to-b from-gray-800 to-gray-500 text-white flex flex-col items-center justify-between p-4 border-r border-blue-500">
-  //       <h1 className="text-2xl font-bold mt-4">Administration A</h1>
-  //       <div className="flex flex-col gap-4 mt-8">
-  //         <button className="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded">
-  //           Add
-  //         </button>
-  //         <button className="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded">
-  //           View Voter details
-  //         </button>
-  //       </div>
-  //       <button className="bg-orange-600 hover:bg-orange-500 text-white py-2 px-4 rounded mt-8">
-  //         Sign Out
-  //       </button>
-  //     </div>
-  //   );
 };
 
 export default DBLeftSec_A;
