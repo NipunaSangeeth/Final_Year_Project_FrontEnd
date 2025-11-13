@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import manageSisMemberApi from "../../common/sisMembers";
 import { toast } from "react-toastify";
+import { useElectionStatus } from "../../hooks/useElectionStatus";
+
 
 const AddMembersSisElection = () => {
   const initialData = {
@@ -13,6 +15,13 @@ const AddMembersSisElection = () => {
   };
 
   const [data, setData] = useState(initialData);
+  // 🟢 Required state (You missed this earlier)
+  const [remainingTime, setRemainingTime] = useState("");
+
+  const navigate = useNavigate();
+  // 🟢 Load election state
+  const { isNominationPeriod, status, nominationEndAt, loading } =
+    useElectionStatus();
 
   const handleOnChange = (name, value) => {
     setData((prev) => ({
@@ -59,10 +68,101 @@ const AddMembersSisElection = () => {
     }
   };
 
-  const navigate = useNavigate();
+  // ⏳ TIMER LOGIC — FIXED & STABLE
+  // useEffect(() => {
+  //   if (!nominationEndAt) return;
+
+  //   let timer;
+  //   const end = new Date(nominationEndAt).getTime();
+
+  //   timer = setInterval(() => {
+  //     const now = new Date().getTime();
+  //     const diff = end - now;
+
+  //     if (diff <= 0) {
+  //       clearInterval(timer);
+  //       navigate("/dashboard_A/rightButtonSec");
+  //     } else {
+  //       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  //       const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  //       const seconds = Math.floor((diff / 1000) % 60);
+
+  //       setRemainingTime(`${hours}h ${minutes}m ${seconds}s`);
+  //     }
+  //   }, 1000);
+
+  //   return () => clearInterval(timer);
+  // }, [nominationEndAt, navigate]);
+  
+  // ✅ Timer Logic
+  useEffect(() => {
+    let timer;
+    const fetchTimer = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/election-status");
+        const json = await res.json();
+        const data = json?.data;
+        if (!data) return;
+
+        const end = new Date(data.nominationEndAt).getTime();
+        timer = setInterval(() => {
+          const now = new Date().getTime();
+          const diff = end - now;
+
+          if (diff <= 0) {
+            clearInterval(timer);
+            navigate("/dashboard_A/rightButtonSec"); // ⏰ redirect after time ends
+          } else {
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+            setRemainingTime(`${hours}h ${minutes}m ${seconds}s`);
+          }
+        }, 1000);
+      } catch (err) {
+        console.error("Timer error:", err);
+      }
+    };
+
+    fetchTimer();
+    return () => clearInterval(timer);
+  }, [navigate]);
+
+  // 🟡 LOAD STATE
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen text-xl font-bold">
+        Checking Election Status…
+      </div>
+    );
+  }
+
+  // 🔴 ACCESS CONTROL — FIXED
+  if (!isNominationPeriod) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen">
+        <h2 className="text-2xl font-bold text-red-600 mb-3">
+          🚫 Nomination Period is not active.
+        </h2>
+
+        <button
+          onClick={() => navigate("/dashboard_A/rightButtonSec")}
+          className="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+        >
+          Go Back
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center p-10">
+      {/* ⏰ Remaining time display */}
+      {remainingTime && (
+        <div className="mb-6 ml-10 text-center text-lg font-bold text-orange-600 bg-white p-3 rounded-lg shadow-md">
+          🕒 Nomination period ends in: {remainingTime}
+        </div>
+      )}
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center p-10 font-semibold text-black gap-6 w-1/2 rounded-lg shadow-lg bg-gradient-to-b from-emerald-950 to-emerald-100"
@@ -166,3 +266,4 @@ const AddMembersSisElection = () => {
 };
 
 export default AddMembersSisElection;
+

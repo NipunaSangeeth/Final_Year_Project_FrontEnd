@@ -29,7 +29,8 @@ const DBLeftSec_B = () => {
         </NavLink>
 
         <NavLink
-          to={isNominationPeriod ? "/dashboard_B/rightSideButton-ADMIN_B" : "#"}
+          // to={isNominationPeriod ? "/dashboard_B/rightSideButton-ADMIN_B" : "#"}// Change it After QA Testing.....
+          to={"/dashboard_B/rightSideButton-ADMIN_B"}
           className={`flex items-center justify-center p-2 font-semibold rounded py-4 cursor-pointer text-white ${
             activeLink === "/dashboard_B/rightSideButton-ADMIN_B"
               ? "bg-emerald-950"

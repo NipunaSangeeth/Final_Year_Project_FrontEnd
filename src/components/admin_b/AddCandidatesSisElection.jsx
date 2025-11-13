@@ -1,201 +1,9 @@
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import manageSisCandidateApi from "../../common/sisCandidate";
-// import imageTobase64 from "../../helper/imageTobase64";
-// import { toast } from "react-toastify";
-
-// const AddCandidatesSisElection = () => {
-//   // const [data, setdata] = useState({
-//   //   sis_name: "",
-//   //   sis_regnumber: "",
-//   //   sis_batch: "",
-//   //   sis_faculty: "",
-//   //   sis_position: "",
-//   //   sis_image: "",
-//   // });
-
-//   const initialData = {
-//     sis_name: "",
-//     sis_regnumber: "",
-//     sis_batch: "",
-//     sis_faculty: "",
-//     sis_position: "",
-//     sis_image: "",
-//   };
-//   const handleOnChange = (name, value) => {
-//     setData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
-
-//   const resetForm = () => {
-//     setData(initialData);
-//   };
-
-//   // function for Upload Image and Convert it Base64 Format
-//   const handleUploadPic = async (e, fieldName) => {
-//     const file = e.target.files[0];
-//     const imagePic = await imageTobase64(file);
-//     console.log(`${fieldName} base64:`, imagePic);
-
-//     setData((prev) => ({
-//       ...prev,
-//       [fieldName]: imagePic,
-//     }));
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     try {
-//       const response = await fetch(
-//         "http://localhost:8000/api/addcandidate-sis-elec",
-//         {
-//           method: manageSisCandidateApi.manageSisCandidateReg.method,
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify(data),
-//         }
-//       );
-//       // Check the Request Was Successfully...
-//       if (response.ok) {
-//         const dataApi = await response.json();
-//         console.log("Request Data", dataApi);
-
-//         toast.success(dataApi.message || "SIS Candidate Sucessfuly Submit");
-//         // reset the Form
-//         resetForm();
-//       } else {
-//         // Help for Handle the case the REQ is not Success
-//         const errorData = await response.json();
-//         toast.error(
-//           errorData.message || "Something went wrong. Please try again."
-//         );
-//       }
-//     } catch (error) {
-//       console.error("Error is: ", error);
-//     }
-//   };
-//   const [data, setData] = useState(initialData);
-
-//   const navigate = useNavigate();
-
-//   return (
-//     <div className="flex flex-col items-center justify-center p-10">
-//       <p className="font-extrabold text-3xl">SIS Election Candidates </p>
-
-//       <form
-//         onSubmit={handleSubmit}
-//         className="flex flex-col items-center p-10 font-semibold text-black gap-6 w-1/2 rounded-lg shadow-lgbg-gradient-to-b from-emerald-950 to-emerald-100"
-//       >
-//         <div className="flex flex-col w-full mb-5">
-//           <label className="text-lg mb-2 text-center">Name</label>
-//           <input
-//             type="text"
-//             name="sis_name"
-//             value={data.sis_name}
-//             onChange={(e) => handleOnChange(e.target.name, e.target.value)}
-//             className="w-full h-12 text-center bg-slate-300 rounded-md p-2"
-//             placeholder="Type the Name"
-//             required
-//           />
-//         </div>
-
-//         <div className="flex flex-col w-full mb-5">
-//           <label className="text-lg mb-2 text-center">
-//             Registration Number
-//           </label>
-//           <input
-//             type="text"
-//             name="sis_regnumber"
-//             value={data.sis_regnumber}
-//             onChange={(e) => handleOnChange(e.target.name, e.target.value)}
-//             className="w-full h-12 text-center bg-slate-300 rounded-md p-2"
-//             placeholder="Type the Registration Number"
-//             required
-//           />
-//         </div>
-
-//         <div className="flex flex-col w-full mb-5">
-//           <label className="text-lg mb-2 text-center">Batch</label>
-//           <input
-//             type="text"
-//             name="sis_batch"
-//             value={data.sis_batch}
-//             onChange={(e) => handleOnChange(e.target.name, e.target.value)}
-//             className="w-full h-12 text-center bg-slate-300 rounded-md p-2"
-//             placeholder="Type the Batch"
-//             required
-//           />
-//         </div>
-
-//         <div className="flex flex-col w-full mb-5">
-//           <label className="text-lg mb-2 text-center">Faculty</label>
-//           <input
-//             type="text"
-//             name="sis_faculty"
-//             value={data.sis_faculty}
-//             onChange={(e) => handleOnChange(e.target.name, e.target.value)}
-//             className="w-full h-12 text-center bg-slate-300 rounded-md p-2"
-//             placeholder="Type the Faculty"
-//             required
-//           />
-//         </div>
-
-//         <div className="flex flex-col w-full mb-5">
-//           <label className="text-lg mb-2 text-center">Position</label>
-//           <input
-//             type="text"
-//             name="sis_position"
-//             value={data.sis_position}
-//             onChange={(e) => handleOnChange(e.target.name, e.target.value)}
-//             className="w-full h-12 text-center bg-slate-300 rounded-md p-2"
-//             placeholder="Type the Faculty"
-//             required
-//           />
-//         </div>
-//         <div className="flex flex-col w-full mb-5">
-//           <label className="text-lg mb-2 text-center">IMAGE</label>
-//           <img
-//             src={data.sis_image}
-//             alt="Candidate Image"
-//             className="w-16 h-16 object-cover rounded"
-//           />
-//           <input
-//             type="file"
-//             name="sis_image"
-//             onChange={(e) => handleUploadPic(e, "sis_image")}
-//             className="w- h-12 text-center bg-slate-300 rounded-md p-2"
-//             placeholder="Drag the IMAGE"
-//             required
-//           />
-//         </div>
-
-//         <button className="mt-6 px-8 py-3 bg-orange-500 text-white font-bold text-lg rounded-lg hover:bg-orange-600 focus:outline-none">
-//           DONE
-//         </button>
-
-//         <button
-//           onClick={() => navigate("/dashboard_B/rightSideButton-ADMIN_B")}
-//           className="mt-4 px-6 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
-//         >
-//           Back
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-// export default AddCandidatesSisElection;
-
-//___________________$$$$$$$$$$$$$$$$$____________________
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import manageSisCandidateApi from "../../common/sisCandidate";
 import imageTobase64 from "../../helper/imageTobase64";
 import { toast } from "react-toastify";
+import { useElectionStatus } from "../../hooks/useElectionStatus";
 
 const AddCandidatesSisElection = () => {
   const initialData = {
@@ -231,6 +39,10 @@ const AddCandidatesSisElection = () => {
 
   const [data, setData] = useState(initialData);
   const navigate = useNavigate();
+    const [remainingTime, setRemainingTime] = useState(null);
+  
+    // ✅ Hook to get election timing
+    const { isNominationPeriod, status, loading } = useElectionStatus();
 
   const handleOnChange = (name, value) => {
     setData((prev) => ({
@@ -296,10 +108,74 @@ const AddCandidatesSisElection = () => {
     }
   };
 
+  // ✅ Timer Logic
+    useEffect(() => {
+      let timer;
+      const fetchTimer = async () => {
+        try {
+          const res = await fetch("http://localhost:8000/api/election-status");
+          const json = await res.json();
+          const data = json?.data;
+          if (!data) return;
+  
+          const end = new Date(data.nominationEndAt).getTime();
+          timer = setInterval(() => {
+            const now = new Date().getTime();
+            const diff = end - now;
+  
+            if (diff <= 0) {
+              clearInterval(timer);
+              navigate("/dashboard_B"); // ⏰ redirect after time ends
+            } else {
+              const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+              const minutes = Math.floor((diff / (1000 * 60)) % 60);
+              const seconds = Math.floor((diff / 1000) % 60);
+              setRemainingTime(`${hours}h ${minutes}m ${seconds}s`);
+            }
+          }, 1000);
+        } catch (err) {
+          console.error("Timer error:", err);
+        }
+      };
+  
+      fetchTimer();
+      return () => clearInterval(timer);
+    }, [navigate]);
+  
+    // ✅ Access Control
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center h-screen text-xl font-bold text-gray-600">
+          Checking Election Status...
+        </div>
+      );
+    }
+  
+    if (!isNominationPeriod) {
+      return (
+        <div className="flex flex-col justify-center items-center h-screen">
+          <h2 className="text-2xl font-bold text-red-600 mb-3">
+            🚫 Nomination Period is not active.
+          </h2>
+          <button
+            onClick={() => navigate("/dashboard_A/rightButtonSec")}
+            className="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+          >
+            Go Back
+          </button>
+        </div>
+      );
+    }
+
   return (
     <div className="flex flex-col items-center justify-center p-10">
       <p className="font-extrabold text-3xl mb-6">SIS Election Candidates</p>
-
+      {/* ⏰ Remaining time display */}
+      {remainingTime && (
+        <div className="mb-6 ml-10 text-center text-lg font-bold text-orange-600 bg-white p-3 rounded-lg shadow-md">
+          🕒 Nomination period ends in: {remainingTime}
+        </div>
+      )}
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center p-10 gap-6 w-full max-w-xl rounded-lg shadow-md bg-gradient-to-b from-emerald-950 to-emerald-100 text-white font-semibold"
@@ -442,3 +318,5 @@ const AddCandidatesSisElection = () => {
 };
 
 export default AddCandidatesSisElection;
+
+

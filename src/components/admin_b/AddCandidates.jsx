@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import imageTobase64 from "../../helper/imageTobase64";
 import managePreCandidateApi from "../../common/PresidentCandidate";
 
 import { toast } from "react-toastify";
+import { useElectionStatus } from "../../hooks/useElectionStatus";
 
 const AddCandidates = () => {
   const initialData = {
@@ -17,6 +18,11 @@ const AddCandidates = () => {
     candidate_image: "",
   };
 
+  const [remainingTime, setRemainingTime] = useState(null);
+  
+    // ✅ Hook to get election timing
+  const { isNominationPeriod, status, loading } = useElectionStatus();
+
   const handleOnChange = (name, value) => {
     setData((prev) => ({
       ...prev,
@@ -27,20 +33,6 @@ const AddCandidates = () => {
   const resetForm = () => {
     setData(initialData);
   };
-
-  // const handleUplodpic = async (e) => {
-  //   const file = e.target.files[0];
-
-  //   const imagePic = await imageTobase64(file);
-  //   console.log("imagePic", imagePic);
-
-  //   setData((preve) => {
-  //     return {
-  //       ...preve,
-  //       candidate_simbol: imagePic,
-  //     };
-  //   });
-  // };
 
   // function for Upload Image and Convert it Base64 Format
   const handleUploadPic = async (e, fieldName) => {
@@ -88,9 +80,74 @@ const AddCandidates = () => {
 
   const navigate = useNavigate();
 
+  // ✅ Timer Logic
+  useEffect(() => {
+    let timer;
+    const fetchTimer = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/election-status");
+        const json = await res.json();
+        const data = json?.data;
+        if (!data) return;
+
+        const end = new Date(data.nominationEndAt).getTime();
+        timer = setInterval(() => {
+          const now = new Date().getTime();
+          const diff = end - now;
+
+          if (diff <= 0) {
+            clearInterval(timer);
+            navigate("/dashboard_B"); // ⏰ redirect after time ends
+          } else {
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+            setRemainingTime(`${hours}h ${minutes}m ${seconds}s`);
+          }
+        }, 1000);
+      } catch (err) {
+        console.error("Timer error:", err);
+      }
+    };
+
+    fetchTimer();
+    return () => clearInterval(timer);
+  }, [navigate]);
+
+  // ✅ Access Control
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen text-xl font-bold text-gray-600">
+        Checking Election Status...
+      </div>
+    );
+  }
+
+  if (!isNominationPeriod) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen">
+        <h2 className="text-2xl font-bold text-red-600 mb-3">
+          🚫 Nomination Period is not active.
+        </h2>
+        <button
+          onClick={() => navigate("/dashboard_A/rightButtonSec")}
+          className="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+        >
+          Go Back
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center justify-center">
       <p className="font-extrabold text-3xl">Pesident Election </p>
+
+      {remainingTime && (
+        <div className="mb-6 ml-10 text-center text-lg font-bold text-orange-600 bg-white p-3 rounded-lg shadow-md">
+          🕒 Nomination period ends in: {remainingTime}
+        </div>
+      )}
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center p-10 font-semibold text-black gap-6 w-1/2 rounded-lg shadow-md"
@@ -231,3 +288,5 @@ const AddCandidates = () => {
 };
 
 export default AddCandidates;
+
+//_____________________
