@@ -1,6 +1,4 @@
-
-
-//________________2025/11/12__________________
+//________________2025/11/12________can get the Status of elections__________
 
 import { useState, useEffect } from "react";
 import axios from "axios";

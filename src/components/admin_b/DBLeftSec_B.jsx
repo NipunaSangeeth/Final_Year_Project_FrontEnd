@@ -35,7 +35,8 @@ const DBLeftSec_B = () => {
             activeLink === "/dashboard_B/rightSideButton-ADMIN_B"
               ? "bg-emerald-950"
               : "bg-emerald-800"
-          } ${!isNominationPeriod ? "opacity-50 cursor-not-allowed hover:none" : "hover:bg-emerald-950"}`}
+               } text-white hover:bg-emerald-950`}
+          // } ${!isNominationPeriod ? "opacity-50 cursor-not-allowed hover:none" : "hover:bg-emerald-950"}`}
           onClick={() =>
             isNominationPeriod &&
             handleLinkClick("/dashboard_B/rightSideButton-ADMIN_B")
@@ -46,12 +47,14 @@ const DBLeftSec_B = () => {
         </NavLink>
 
         <NavLink
-          to={isElectionRunning ? "/dashboard_B/election-Side-Buttons" : "#"}
+          // to={isElectionRunning ? "/dashboard_B/election-Side-Buttons" : "#"} //Change it After QA Testing.....
+          to={"/dashboard_B/election-Side-Buttons"}
           className={`flex items-center justify-center p-2 font-semibold rounded py-4 cursor-pointer text-white ${
             activeLink === "/dashboard_B/election-Side-Buttons"
               ? "bg-emerald-950"
               : "bg-emerald-800"
-          } ${!isElectionRunning ? "opacity-50 cursor-not-allowed hover:none" : "hover:bg-emerald-950"}`}
+              } text-white hover:bg-emerald-950`}
+          // } ${!isElectionRunning ? "opacity-50 cursor-not-allowed hover:none" : "hover:bg-emerald-950"}`} //Change it After QA Testing.....
           onClick={() =>
             isElectionRunning &&
             handleLinkClick("/dashboard_B/election-Side-Buttons")

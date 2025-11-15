@@ -473,15 +473,15 @@ export default function CreateElection() {
               </li>
               <li>
                 <span className="inline-block w-12 h-6 mr-2 align-middle bg-gradient-to-r from-yellow-600 to-amber-800 rounded-sm" />{" "}
-                Nomination Closed / Waiting (blue→red)
+                Nomination Closed / Waiting (Gold)
               </li>
               <li>
                 <span className="inline-block w-12 h-6 mr-2 align-middle bg-gradient-to-r from-green-400 to-green-800 rounded-sm" />{" "}
-                Election Running (gold)
+                Election Running (Green)
               </li>
               <li>
                 <span className="inline-block w-12 h-6 mr-2 align-middle bg-gradient-to-r from-purple-600 to-violet-800 rounded-sm" />{" "}
-                Election Completed (gold→red)
+                Election Completed (Purple)
               </li>
             </ul>
           </div>
