@@ -158,7 +158,7 @@ const AddCandidatesSisElection = () => {
             🚫 Nomination Period is not active.
           </h2>
           <button
-            onClick={() => navigate("/dashboard_A/rightButtonSec")}
+            onClick={() => navigate("/dashboard_B")}
             className="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
           >
             Go Back

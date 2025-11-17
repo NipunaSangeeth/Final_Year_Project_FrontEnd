@@ -2971,3 +2971,383 @@
 //             ))}
 //           </div> 
 
+
+// // DashboardTimers.jsx
+// import React, { useEffect, useState } from "react";
+// import { useElectionStatus } from "../../hooks/useElectionStatus";
+
+// const formatTime = (ms) => {
+//   if (ms <= 0) return "00:00:00";
+
+//   const totalSeconds = Math.floor(ms / 1000);
+//   const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+//   const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+//   const seconds = String(totalSeconds % 60).padStart(2, "0");
+
+//   return `${hours}:${minutes}:${seconds}`;
+// };
+
+// const DashboardTimers = () => {
+//   const { status, loading, error } = useElectionStatus();
+//   const [timers, setTimers] = useState({
+//     nominationStart: "00:00:00",
+//     nominationEnd: "00:00:00",
+//     electionStart: "00:00:00",
+//     electionEnd: "00:00:00",
+//   });
+
+//   const [dates, setDates] = useState({
+//     nominationStartAt: null,
+//     nominationEndAt: null,
+//     electionStartAt: null,
+//     electionEndAt: null,
+//   });
+
+//   useEffect(() => {
+//     const stored = JSON.parse(localStorage.getItem("latestElectionMeta"));
+//     if (stored) {
+//       setDates({
+//         nominationStartAt: new Date(stored.nominationStartAt),
+//         nominationEndAt: new Date(stored.nominationEndAt),
+//         electionStartAt: new Date(stored.electionStartAt),
+//         electionEndAt: new Date(stored.electionEndAt),
+//       });
+//     }
+//   }, [status]);
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       if (
+//         !dates.nominationStartAt ||
+//         !dates.nominationEndAt ||
+//         !dates.electionStartAt ||
+//         !dates.electionEndAt
+//       ) {
+//         return;
+//       }
+
+//       const now = new Date();
+
+//       setTimers({
+//         nominationStart: formatTime(dates.nominationStartAt - now),
+//         nominationEnd: formatTime(dates.nominationEndAt - now),
+//         electionStart: formatTime(dates.electionStartAt - now),
+//         electionEnd: formatTime(dates.electionEndAt - now),
+//       });
+//     }, 1000);
+
+//     return () => clearInterval(interval);
+//   }, [dates]);
+
+//   if (loading) {
+//     return (
+//       <div className="text-center text-white text-lg py-6">
+//         Loading dashboard timers...
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <div className="text-center text-red-300 text-lg py-6">
+//         Failed to fetch election status.
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="w-full flex flex-col ml-9  mt-10">
+//       {/* TIMER GRID */}
+//       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-[85%] max-w-[700px]">
+
+//         {/* Timer Card */}
+//         <TimerCard
+//           title="Nomination Starts In"
+//           time={timers.nominationStart}
+//           color="bg-gradient-to-br from-[#00A86B] to-[#007E53] rounded-[3rem] opacity-80"
+//         />
+
+//         <TimerCard
+//           title="Nomination Ends In"
+//           time={timers.nominationEnd}
+//           color="bg-gradient-to-br from-[#00A86B] to-[#007E53] rounded-[3rem] opacity-80"
+//         />
+
+//         <TimerCard
+//           title="Election Starts In"
+//           time={timers.electionStart}
+//           color="bg-gradient-to-br from-[#00A86B] to-[#007E53] rounded-[3rem] opacity-80"
+//         />
+
+//         <TimerCard
+//           title="Election Ends In"
+//           time={timers.electionEnd}
+//           color="bg-gradient-to-br from-[#00A86B] to-[#007E53] rounded-[3rem] opacity-80"
+//         />
+
+//       </div>
+
+//       {/* BUTTON */}
+//       <button
+//         className="mt-10 px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-lg font-semibold rounded-xl shadow-lg shadow-black/40 transition-all duration-300"
+//       >
+//         More Details About the System
+//       </button>
+//     </div>
+//   );
+// };
+
+// export default DashboardTimers;
+
+// // -------------------------------------------------
+// // Reusable Timer Card Component
+// // -------------------------------------------------
+// const TimerCard = ({ title, time, color }) => {
+//   return (
+//     <div
+//       className={`p-6 text-center rounded-2xl bg-gradient-to-br ${color} shadow-xl shadow-black/30 border border-white/20 backdrop-blur-sm`}
+//     >
+//       <h2 className="text-xl font-semibold text-white mb-3">{title}</h2>
+//       <p className="text-3xl font-bold text-white tracking-wider">{time}</p>
+//     </div>
+//   );
+// };
+
+// ________________________________________________________
+
+// // DashboardTimers.jsx
+// import React, { useEffect, useState } from "react";
+// import { useElectionStatus } from "../../hooks/useElectionStatus";
+
+// const formatTime = (ms) => {
+//   if (ms <= 0) return "00:00:00";
+
+//   const totalSeconds = Math.floor(ms / 1000);
+//   const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+//   const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(
+//     2,
+//     "0"
+//   );
+//   const seconds = String(totalSeconds % 60).padStart(2, "0");
+
+//   return `${hours}:${minutes}:${seconds}`;
+// };
+
+// const DashboardTimers = () => {
+//   const { status, loading, error } = useElectionStatus();
+//   const [timers, setTimers] = useState({
+//     nominationStart: "00:00:00",
+//     nominationEnd: "00:00:00",
+//     electionStart: "00:00:00",
+//     electionEnd: "00:00:00",
+//   });
+
+//   const [dates, setDates] = useState({
+//     nominationStartAt: null,
+//     nominationEndAt: null,
+//     electionStartAt: null,
+//     electionEndAt: null,
+//   });
+
+//   // Fetch election metadata from localStorage stored by the hook
+//   useEffect(() => {
+//     const stored = JSON.parse(localStorage.getItem("latestElectionMeta"));
+//     if (stored) {
+//       setDates({
+//         nominationStartAt: new Date(stored.nominationStartAt),
+//         nominationEndAt: new Date(stored.nominationEndAt),
+//         electionStartAt: new Date(stored.electionStartAt),
+//         electionEndAt: new Date(stored.electionEndAt),
+//       });
+//     }
+//   }, [status]);
+
+//   // -----------------------
+//   // MASTER COUNTDOWN LOGIC
+//   // -----------------------
+//   useEffect(() => {
+//     if (
+//       !dates.nominationStartAt ||
+//       !dates.nominationEndAt ||
+//       !dates.electionStartAt ||
+//       !dates.electionEndAt
+//     ) {
+//       return;
+//     }
+
+//     const interval = setInterval(() => {
+//       const now = new Date();
+
+//       const ns = dates.nominationStartAt - now;
+//       const ne = dates.nominationEndAt - now;
+//       const es = dates.electionStartAt - now;
+//       const ee = dates.electionEndAt - now;
+
+//       // PHASE LOGIC IMPLEMENTATION
+//       if (now < dates.nominationStartAt) {
+//         // BEFORE NOMINATION
+//         setTimers({
+//           nominationStart: formatTime(ns),
+//           nominationEnd: "00:00:00",
+//           electionStart: formatTime(es),
+//           electionEnd: "00:00:00",
+//         });
+//       } else if (
+//         now >= dates.nominationStartAt &&
+//         now < dates.nominationEndAt
+//       ) {
+//         // DURING NOMINATION
+//         setTimers({
+//           nominationStart: "00:00:00",
+//           nominationEnd: formatTime(ne),
+//           electionStart: formatTime(es),
+//           electionEnd: "00:00:00",
+//         });
+//       } else if (now >= dates.nominationEndAt && now < dates.electionStartAt) {
+//         // BETWEEN NOMINATION END AND ELECTION START
+//         setTimers({
+//           nominationStart: "00:00:00",
+//           nominationEnd: "00:00:00",
+//           electionStart: formatTime(es),
+//           electionEnd: "00:00:00",
+//         });
+//       } else if (now >= dates.electionStartAt && now < dates.electionEndAt) {
+//         // DURING ELECTION
+//         setTimers({
+//           nominationStart: "00:00:00",
+//           nominationEnd: "00:00:00",
+//           electionStart: "00:00:00",
+//           electionEnd: formatTime(ee),
+//         });
+//       } else {
+//         // AFTER ELECTION
+//         setTimers({
+//           nominationStart: "00:00:00",
+//           nominationEnd: "00:00:00",
+//           electionStart: "00:00:00",
+//           electionEnd: "00:00:00",
+//         });
+//       }
+//     }, 1000);
+
+//     return () => clearInterval(interval);
+//   }, [dates]);
+
+//   // -----------------------
+//   // LOADING + ERROR UI
+//   // -----------------------
+//   if (loading) {
+//     return (
+//       <div className="text-center text-white text-lg py-6">
+//         Loading dashboard timers...
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <div className="text-center text-red-300 text-lg py-6">
+//         Failed to fetch election status.
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="w-full flex flex-col ml-9 mt-10">
+//       {/* TIMER GRID */}
+//       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-[85%] max-w-[700px]">
+//         <TimerCard
+//           title="Nomination Starts In"
+//           time={timers.nominationStart}
+//           color="from-[#00A86B] to-[#007E53] rounded-[3rem] opacity-80"
+//         />
+
+//         <TimerCard
+//           title="Nomination Ends In"
+//           time={timers.nominationEnd}
+//           color="from-[#00A86B] to-[#007E53] rounded-[3rem] opacity-80"
+//         />
+
+//         <TimerCard
+//           title="Election Starts In"
+//           time={timers.electionStart}
+//           color="from-[#00A86B] to-[#007E53] rounded-[3rem] opacity-80"
+//         />
+
+//         <TimerCard
+//           title="Election Ends In"
+//           time={timers.electionEnd}
+//           color="from-[#00A86B] to-[#007E53] rounded-[3rem] opacity-80"
+//         />
+//       </div>
+//       {/* BUTTON WRAPPER */}
+//       <div className="mt-4">
+//         <button className="flex items-center text-white hover:text-blue-200 text-2xl">
+//           More Details About the System
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default DashboardTimers;
+
+// // Reusable Timer Card
+// const TimerCard = ({ title, time, color }) => {
+//   return (
+//     <div
+//       className={`p-6 text-center rounded-2xl bg-gradient-to-br ${color} shadow-xl shadow-black/30 border border-white/20 backdrop-blur-sm`}
+//     >
+//       <h2 className="text-xl font-semibold text-white mb-3">{title}</h2>
+//       <p className="text-3xl font-bold text-white tracking-wider">{time}</p>
+//     </div>
+//   );
+// };
+
+
+
+
+
+
+        <div className="relative flex flex-col py-12 flex-1 h-full bg-gradient-to-b from-emerald-950 to-emerald-100 overflow-auto">
+  <h1 className=" flex-col text-center font-semibold text-5xl">
+    ADMINISTRATION A
+  </h1>
+  <hr className="mt-16" />
+
+  {/* Only show background, guide popup, timers on /dashboard_A */}
+  {location.pathname === "/dashboard_A" && (
+    <div className="absolute inset-0 top-[11rem] z-0">
+      <AdminBackground />
+      <DashboardGuidePopup/>
+      <DashboardTimers />
+    </div>
+  )}
+
+  <div className="relative z-10">
+    <Routes>
+      <Route path="/dashboard_A" element={<Dashboard_A />} />
+
+      <Route path="rightButtonSec">
+        <Route index element={<DBRightButtonSec />} />
+        <Route path="addmembers" element={<AddMembers />} />
+        <Route
+          path="addMembers-Sis-Election"
+          element={<AddMembersSisElection />}
+        />
+      </Route>
+
+      <Route path="view-details-tab">
+        <Route index element={<ViewDetailsTab />} />
+        <Route
+          path="view-President-Voters-Details"
+          element={<ViewPresidentVoteDetails />}
+        />
+        <Route
+          path="view-sis-voter-details"
+          element={<ViewSisVoterDetails />}
+        />
+      </Route>
+    </Routes>
+  </div>
+</div>

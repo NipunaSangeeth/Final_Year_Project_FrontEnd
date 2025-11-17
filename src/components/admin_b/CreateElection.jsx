@@ -3,6 +3,8 @@ import React, { useEffect, useState, useRef } from "react";
 import dayjs from "dayjs";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { FiArrowLeft } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const DELAYS = [
   { label: "2 minutes", value: "2min", minutes: 2 },
@@ -200,9 +202,21 @@ export default function CreateElection() {
     if (serverStatus.status === "completed") return "Previous Election Status";
     return "Current Election Status";
   };
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-950 to-emerald-100 overflow-auto py-8 px-6">
+      <>
+        {" "}
+        <button
+          className="flex items-center text-white hover:text-blue-200 mt-2 mb-7 text-2xl"
+          onClick={() => navigate("/dashboard_B")}
+        >
+          <FiArrowLeft className="mr-2" />
+          Back to Dashboard
+        </button>
+      </>
+
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* LEFT */}
         <div className="bg-white/90 backdrop-blur-lg rounded-xl p-8 shadow-md">
