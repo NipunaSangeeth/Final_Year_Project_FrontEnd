@@ -1,6 +1,7 @@
 // DashboardTimers.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios"; // 🔹 Added axios to fetch election status
+import AdminVideoGuide from "./AdminVideoGuide";
 
 const formatTime = (ms) => {
   if (ms <= 0) return "00:00:00";
@@ -180,9 +181,10 @@ const DashboardTimers = () => {
 
       {/* BUTTON WRAPPER */}
       <div className="mt-36 w-full flex ml-40 z-50">
-        <button className="px-6 py-3 text-white hover:text-blue-200 text-2xl rounded-lg border border-white/30 bg-black/50">
+        {/* <button className="px-6 py-3 text-white hover:text-blue-200 text-2xl rounded-lg border border-white/30 bg-black/50">
           More Details About the System
-        </button>
+        </button> */}
+         <AdminVideoGuide />
       </div>
     </div>
   );
