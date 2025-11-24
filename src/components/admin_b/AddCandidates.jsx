@@ -19,8 +19,8 @@ const AddCandidates = () => {
   };
 
   const [remainingTime, setRemainingTime] = useState(null);
-  
-    // ✅ Hook to get election timing
+
+  // ✅ Hook to get election timing
   const { isNominationPeriod, status, loading } = useElectionStatus();
 
   const handleOnChange = (name, value) => {
@@ -141,10 +141,12 @@ const AddCandidates = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <p className="font-extrabold text-3xl">Pesident Election </p>
+      <p className="font-extrabold text-4xl pt-4">Pesident Election </p>
 
       {remainingTime && (
-        <div className="mb-6 ml-10 text-center text-lg font-bold text-orange-600 bg-white p-3 rounded-lg shadow-md">
+        // <div className="flex flex-col mb-6 text-center text-lg font-bold text-orange-600 bg-white p-3 rounded-lg shadow-md">
+        <div className="flex flex-col mb-1 text-lg font-bold text-orange-600 bg-white p-3 rounded-lg shadow-md w-fit h-16 self-start text-left border-4 border-rose-600">
+          {" "}
           🕒 Nomination period ends in: {remainingTime}
         </div>
       )}

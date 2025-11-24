@@ -1,16 +1,44 @@
+//___________________________________________________________________________________________
+//_________election result LiVE part Now Compatible with the time________
+
 //______________________2025/11/12____________________
+// LEFT SIDEBAR (ADMIN B)
+// Updated to use 'isReportWindowActive' & 'isResultLocked' from hook
+// - Election Result(LIVE) button enabled when:
+//    a) election is running OR
+//    b) report window is active (the 2-minute window after election end)
+// - Election Result(LIVE) button disabled when isResultLocked === true
+
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import  {useElectionStatus}  from "../../hooks/useElectionStatus";
+import { useElectionStatus } from "../../hooks/useElectionStatus";
 
 const DBLeftSec_B = () => {
   const [activeLink, setActiveLink] = useState("");
   const navigate = useNavigate();
-  const { isNominationPeriod, isElectionRunning, isIdle } = useElectionStatus();
+
+  // NEW: we pull isReportWindowActive and isResultLocked from the hook
+  const {
+    isNominationPeriod,
+    isElectionRunning,
+    isIdle,
+    isReportWindowActive,
+    isResultLocked,
+  } = useElectionStatus();
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
   };
+
+  // Determine if Election Result link should be interactive (enabled)
+  // Enabled when:
+  //  - election is actively running OR
+  //  - report window is active (short window after election end)
+  // Disabled when:
+  //  - system is idle/nomination and not in running/window state OR
+  //  - result is locked (report generated or window expired)
+  const electionResultEnabled =
+    (isElectionRunning || isReportWindowActive) && !isResultLocked;
 
   return (
     <div className="h-full p-12 flex flex-col bg-gradient-to-b from-emerald-950 to-emerald-100 backdrop-blur-md shadow-2xl min-w-96 w-96 gap-3 overflow-auto">
@@ -29,14 +57,15 @@ const DBLeftSec_B = () => {
         </NavLink>
 
         <NavLink
-          // to={isNominationPeriod ? "/dashboard_B/rightSideButton-ADMIN_B" : "#"}// Change it After QA Testing.....
-          to={"/dashboard_B/rightSideButton-ADMIN_B"}
+          to={isNominationPeriod ? "/dashboard_B/rightSideButton-ADMIN_B" : "#"}
           className={`flex items-center justify-center p-2 font-semibold rounded py-4 cursor-pointer text-white ${
             activeLink === "/dashboard_B/rightSideButton-ADMIN_B"
               ? "bg-emerald-950"
               : "bg-emerald-800"
-               } text-white hover:bg-emerald-950`}
-          // } ${!isNominationPeriod ? "opacity-50 cursor-not-allowed hover:none" : "hover:bg-emerald-950"}`}
+            
+          } text-white hover:bg-emerald-950 ${
+            !isNominationPeriod ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           onClick={() =>
             isNominationPeriod &&
             handleLinkClick("/dashboard_B/rightSideButton-ADMIN_B")
@@ -47,21 +76,24 @@ const DBLeftSec_B = () => {
         </NavLink>
 
         <NavLink
-          // to={isElectionRunning ? "/dashboard_B/election-Side-Buttons" : "#"} //Change it After QA Testing.....
-          to={"/dashboard_B/election-Side-Buttons"}
+          // Note: to uses '#' when disabled to avoid navigation
+          to={
+            electionResultEnabled ? "/dashboard_B/election-Side-Buttons" : "#"
+          }
           className={`flex items-center justify-center p-2 font-semibold rounded py-4 cursor-pointer text-white ${
             activeLink === "/dashboard_B/election-Side-Buttons"
               ? "bg-emerald-950"
               : "bg-emerald-800"
-              } text-white hover:bg-emerald-950`}
-          // } ${!isElectionRunning ? "opacity-50 cursor-not-allowed hover:none" : "hover:bg-emerald-950"}`} //Change it After QA Testing.....
+          } text-white hover:bg-emerald-950 ${
+            !electionResultEnabled ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           onClick={() =>
-            isElectionRunning &&
+            electionResultEnabled &&
             handleLinkClick("/dashboard_B/election-Side-Buttons")
           }
-          disabled={!isElectionRunning}
+          disabled={!electionResultEnabled}
         >
-          <span>Election Result</span>
+          <span>Election Result(LIVE)</span>
         </NavLink>
 
         <NavLink

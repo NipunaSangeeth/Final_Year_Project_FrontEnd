@@ -169,6 +169,8 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FiArrowLeft } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const PreviousPresidentElec = () => {
   const [selectedYear, setSelectedYear] = useState("2024");
@@ -214,8 +216,20 @@ const PreviousPresidentElec = () => {
     fetchElection();
   }, [selectedYear]);
 
+  const navigate = useNavigate();
+
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+    <div className="bg-slate-500 rounded-xl shadow-md p-6 border border-gray-100">
+            <>
+              {" "}
+              <button
+                className="flex items-center text-white hover:text-blue-200 mt-2 mb-7 text-2xl"
+                onClick={() => navigate("/dashboard_B")}
+              >
+                <FiArrowLeft className="mr-2" />
+                Back to Dashboard
+              </button>
+            </>
       {/* Header & Year selector */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-gray-800">

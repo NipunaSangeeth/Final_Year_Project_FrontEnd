@@ -334,14 +334,14 @@ export default function CreateElection() {
             </div>
 
             {/* Button + alert */}
-            <div className="text-center pt-6 relative">
+            <div className="text-center pt-16 relative">
               <button
                 onClick={handleSubmit}
                 disabled={isFormDisabled()}
                 className={`px-8 py-3 rounded-full text-white font-bold text-lg shadow-lg ${
                   isFormDisabled()
                     ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-[#6d4bde] hover:bg-[#593bd1]"
+                    : "bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-white shadow-md hover:scale-105 font-semibold"
                 }`}
               >
                 Start Election

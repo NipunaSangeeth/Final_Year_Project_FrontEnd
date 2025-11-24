@@ -20,15 +20,15 @@ const DBRightSec_A = () => {
   const location = useLocation(); // help to rederect parts
   return (
     <div className="relative flex flex-col py-12 flex-1 h-full bg-gradient-to-b from-emerald-950 to-emerald-100 overflow-auto">
-      <h1 className=" flex-col text-center font-semibold text-5xl">
-        ADMINISTRATION A
+      <h1 className=" flex-col text-center font-extrabold text-5xl text-white">
+        Voters Enrollment Unit
       </h1>
       <hr className="mt-16" /> {/* The Line(-----)*/}
-      {/* ✅ Only show background when on /dashboard_B */}
+      {/*Only show background when on /dashboard_B */}
       {location.pathname === "/dashboard_A" && (
         <div className="absolute inset-0 top-[11rem] z-0">
           <AdminBackground />
-          <DashboardGuidPopupAdmin_A />
+          {/* <DashboardGuidPopupAdmin_A /> */}
           <DashboardTimers />
         </div>
       )}
