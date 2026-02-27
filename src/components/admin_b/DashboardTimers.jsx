@@ -1,6 +1,6 @@
 // DashboardTimers.jsx
 import React, { useEffect, useState } from "react";
-import axios from "axios"; // 🔹 Added axios to fetch election status
+import axios from "axios"; 
 import AdminVideoGuide from "./AdminVideoGuide";
 
 const formatTime = (ms) => {
@@ -35,9 +35,9 @@ const DashboardTimers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  // -----------------------
+
   // FETCH ELECTION DATES
-  // -----------------------
+
   useEffect(() => {
     const fetchElectionDates = async () => {
       try {
@@ -66,9 +66,9 @@ const DashboardTimers = () => {
     fetchElectionDates();
   }, []);
 
-  // -----------------------
-  // MASTER COUNTDOWN LOGIC
-  // -----------------------
+ 
+  // Dashboard COUNTDOWN LOGIC
+
   useEffect(() => {
     if (
       !dates.nominationStartAt ||
@@ -131,9 +131,7 @@ const DashboardTimers = () => {
     return () => clearInterval(interval);
   }, [dates]);
 
-  // -----------------------
   // LOADING + ERROR UI
-  // -----------------------
   if (loading) {
     return (
       <div className="text-center text-white text-lg py-6">
@@ -179,13 +177,7 @@ const DashboardTimers = () => {
         />
       </div>
 
-      {/* BUTTON WRAPPER */}
-      <div className="mt-36 w-full flex ml-40 z-50">
-        {/* <button className="px-6 py-3 text-white hover:text-blue-200 text-2xl rounded-lg border border-white/30 bg-black/50">
-          More Details About the System
-        </button> */}
-         <AdminVideoGuide />
-      </div>
+
     </div>
   );
 };

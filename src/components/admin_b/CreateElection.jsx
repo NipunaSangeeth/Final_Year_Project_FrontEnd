@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiArrowLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
+// delay parts
 const DELAYS = [
   { label: "2 minutes", value: "2min", minutes: 2 },
   { label: "5 minutes", value: "5min", minutes: 5 },
@@ -56,15 +57,14 @@ export default function CreateElection() {
       setStatusLoading(false);
     }
   };
-
-  // Initial + 1s polling
+  // Initial + 1s polling for DEV (production ?)
   useEffect(() => {
     fetchStatus();
     pollRef.current = setInterval(fetchStatus, 1000);
     return () => clearInterval(pollRef.current);
   }, []);
 
-  // Auto-fill election start time based on delay
+  // Auto-fill election start time based on delay (ELECtion date)
   useEffect(() => {
     const { nominationEndAt, delayBeforeStart } = form;
     if (nominationEndAt && delayBeforeStart) {
@@ -141,7 +141,7 @@ export default function CreateElection() {
     return serverStatus.status && serverStatus.status !== "completed";
   };
 
-  // Countdown updates — FIXED nomination logic:
+  // Countdown updates —  nomination logic part
   useEffect(() => {
     function tick() {
       const now = dayjs();
@@ -228,7 +228,7 @@ export default function CreateElection() {
 
           <div className="space-y-6">
             {/* Election Type */}
-            <div className="bg-gray-100 rounded-md p-4">
+            {/* <div className="bg-gray-100 rounded-md p-4">
               <label className="text-lg font-semibold block mb-2">
                 Election Type
               </label>
@@ -244,6 +244,22 @@ export default function CreateElection() {
                 <option value="president">President</option>
                 <option value="sis">SIS Election</option>
               </select>
+            </div> */}
+            <div className="bg-gray-100 rounded-md p-4">
+              <label className="text-lg font-semibold block mb-2">
+                Election Type
+              </label>
+
+              <input
+                type="text"
+                placeholder="Eg: presidential-2026"
+                value={form.electionType}
+                onChange={(e) =>
+                  setForm({ ...form, electionType: e.target.value.trim() })
+                }
+                className="w-full rounded-md p-3 bg-gray-200 border-none"
+                disabled={isFormDisabled()}
+              />
             </div>
 
             <h2 className="text-2xl font-bold text-center my-4">
@@ -387,7 +403,7 @@ export default function CreateElection() {
               </div>
             ))}
           </div>
-
+{/* map and check  */}
           <div className="border-t border-b py-4 mb-4">
             <h3 className="text-xl font-semibold text-center mb-3">
               Indicators

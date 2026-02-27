@@ -30,13 +30,8 @@ const DBLeftSec_B = () => {
     setActiveLink(link);
   };
 
-  // Determine if Election Result link should be interactive (enabled)
-  // Enabled when:
-  //  - election is actively running OR
-  //  - report window is active (short window after election end)
-  // Disabled when:
-  //  - system is idle/nomination and not in running/window state OR
-  //  - result is locked (report generated or window expired)
+  
+
   const electionResultEnabled =
     (isElectionRunning || isReportWindowActive) && !isResultLocked;
 

@@ -59,17 +59,17 @@ const ElectionResult = () => {
     "#F472B6","#6EE7B7"
   ];
 
-  // -------------------------------------------------
+
   // Hook: read global computed states (report window + lock)
-  // -------------------------------------------------
+
   const {
     isReportWindowActive, // true while we are in the short report window
     isResultLocked,       // true if report generated or window expired -> final locked
   } = useElectionStatus();
 
-  // ---------------------------
+
   // Fetch votes & rejected votes
-  // ---------------------------
+  
   const fetchVotes = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/get-votes");
@@ -95,9 +95,9 @@ const ElectionResult = () => {
     }
   };
 
-  // ---------------------------
+
   // Fetch election status info (used locally to show timers & IDs)
-  // ---------------------------
+
   const fetchElectionInfo = async () => {
     try {
       setLoadingElectionInfo(true);
@@ -112,9 +112,9 @@ const ElectionResult = () => {
     }
   };
 
-  // ---------------------------
+
   // Countdown utilities
-  // ---------------------------
+
   const formatDiff = (ms) => {
     if (ms <= 0) return "0s";
     const totalSeconds = Math.floor(ms / 1000);
@@ -128,9 +128,9 @@ const ElectionResult = () => {
     return `${seconds}s`;
   };
 
-  // ---------------------------
+
   // POOLING Initial setup
-  // ---------------------------
+ 
   useEffect(() => {
     fetchElectionInfo();
     fetchVotes();
@@ -153,9 +153,9 @@ const ElectionResult = () => {
     };
   }, []);
 
-  // ---------------------------
+
   // Compute countdowns and window expiration handling
-  // ---------------------------
+ 
   useEffect(() => {
     let reportTimer = null;
 
@@ -242,9 +242,9 @@ const ElectionResult = () => {
     }
   }, [isResultLocked, navigate]);
 
-  // ---------------------------
+
   // Generate Report + Clear Redis immediately
-  // ---------------------------
+
   const handleGenerateReport = async () => {
     if (!electionInfo || !electionInfo.electionEndAt) {
       navigate("/dashboard_B");
@@ -264,7 +264,7 @@ const ElectionResult = () => {
     try {
       setIsGenerating(true);
 
-      // 1️⃣ Fetch PDF (your existing implementation used fetch)
+      // Fetch PDF (your existing implementation used fetch)
       const res = await fetch("http://localhost:8000/api/generate-report", {
         method: "GET",
         credentials: "include",
@@ -289,7 +289,7 @@ const ElectionResult = () => {
       a.remove();
       window.URL.revokeObjectURL(url);
 
-      // 2️⃣ Mark report generated in localStorage (per-election) so hook/sidebar lock state updates
+      //  Mark report generated in localStorage (per-election) so hook/sidebar lock state updates
       try {
         if (electionInfo && electionInfo._id) {
           localStorage.setItem(`reportGenerated_${electionInfo._id}`, "true");
@@ -298,14 +298,14 @@ const ElectionResult = () => {
         // ignore localStorage errors
       }
 
-      // 3️⃣ Clear Redis immediately (your existing endpoint)
+      // Clear Redis immediately (your existing endpoint)
       try {
         await axios.delete("http://localhost:8000/api/election/clear");
       } catch (err) {
         console.error("❌ Failed to clear Redis after report:", err);
       }
 
-      // 4️⃣ Redirect to dashboard_B (this also prevents re-access)
+      //  Redirect to dashboard_B (this also prevents re-access)
       navigate("/dashboard_B");
     } catch (err) {
       console.error("Error generating report:", err);
@@ -315,9 +315,9 @@ const ElectionResult = () => {
     }
   };
 
-  // ---------------------------
+  
   // Chart data
-  // ---------------------------
+
   const barData = {
     labels: candidates.map((c) => `${c.name} (#${c.number})`),
     datasets: [{

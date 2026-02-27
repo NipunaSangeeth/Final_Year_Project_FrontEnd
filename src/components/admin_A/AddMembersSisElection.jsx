@@ -15,11 +15,11 @@ const AddMembersSisElection = () => {
   };
 
   const [data, setData] = useState(initialData);
-  // 🟢 Required state (You missed this earlier)
+  // Required state (You missed this earlier)
   const [remainingTime, setRemainingTime] = useState("");
 
   const navigate = useNavigate();
-  // 🟢 Load election state
+  //Load election state
   const { isNominationPeriod, status, nominationEndAt, loading } =
     useElectionStatus();
 
@@ -94,7 +94,7 @@ const AddMembersSisElection = () => {
   //   return () => clearInterval(timer);
   // }, [nominationEndAt, navigate]);
   
-  // ✅ Timer Logic
+  // Timer Logic
   useEffect(() => {
     let timer;
     const fetchTimer = async () => {

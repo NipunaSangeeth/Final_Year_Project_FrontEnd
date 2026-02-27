@@ -2,7 +2,7 @@
 //##################______2025/11/13________###############
 
 import React from "react";
-import { useLocation } from "react-router-dom"; // ✅ Add this
+import { useLocation } from "react-router-dom"; // Add this Hook for Direct navigation purpose
 import { Dashboard_B } from "../../containers";
 import {
   AddCandidates,
@@ -25,7 +25,7 @@ import DashboardGuidePopup from "./DashboardGuidePopup";
 import DashboardTimers from "./DashboardTimers";
 
 const DBRightSec_B = () => {
-  const location = useLocation(); //  current route path
+  const location = useLocation(); // current route path
 
   return (
     <div className="flex flex-col py-12 flex-1 h-full bg-gradient-to-b from-emerald-950 to-emerald-100 overflow-auto relative">
@@ -49,7 +49,7 @@ const DBRightSec_B = () => {
           <Route path="/dashboard_B" element={<Dashboard_B />} />
           <Route path="/create-election" element={<CreateElection />} />
 
-          {/* 🟩 Previous Election Results Section */}
+          {/*  Previous Election Results Section */}
           <Route path="/pre-elec-result">
             <Route index element={<PreElecResultButtons />} />
             <Route path="president" element={<PreviousPresidentElec />} />

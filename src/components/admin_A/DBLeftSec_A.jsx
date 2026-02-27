@@ -20,7 +20,7 @@ const DBLeftSec_A = () => {
       <ul className="flex flex-col gap-44 mt-36 mb-auto">
         <NavLink
           // to={isNominationPeriod ? "/dashboard_A/rightButtonSec" : "#"}
-          to={"/dashboard_A/rightButtonSec"}  // 🔓 development override
+          to={"/dashboard_A/rightButtonSec"}  // development purpose 
           className={`flex items-center justify-center p-2 font-semibold rounded py-4 cursor-pointer text-white ${
             activeLink === "/dashboard_A/rightButtonSec"
               ? "bg-emerald-950"

@@ -6,7 +6,7 @@ const DashboardGuidPopupAdmin_A = () => {
   const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
-    // ⏱️ Show popup automatically after 5 seconds
+    // Show popup automatically after 5 seconds
     const timer = setTimeout(() => setShowPopup(true), 5000);
     return () => clearTimeout(timer);
   }, []);
@@ -38,7 +38,7 @@ const DashboardGuidPopupAdmin_A = () => {
             <div className="space-y-5 text-base leading-relaxed">
               <p className="text-center text-4xl font-semibold text-amber-300">
                 ✨ Welcome to{" "}
-                <span className="text-amber-400">Administration B</span>
+                <span className="text-amber-400">Administration A ✨</span>
               </p>
 
               <ul className="list-disc list-inside space-y-3 text-white/90 text-3xl">

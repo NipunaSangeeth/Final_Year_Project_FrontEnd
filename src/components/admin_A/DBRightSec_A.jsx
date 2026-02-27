@@ -28,7 +28,7 @@ const DBRightSec_A = () => {
       {location.pathname === "/dashboard_A" && (
         <div className="absolute inset-0 top-[11rem] z-0">
           <AdminBackground />
-          {/* <DashboardGuidPopupAdmin_A /> */}
+          <DashboardGuidPopupAdmin_A />
           <DashboardTimers />
         </div>
       )}

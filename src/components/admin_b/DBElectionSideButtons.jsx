@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-
+// Dashboard main buttons
 const DBElectionSideButtons = () => {
   return (
     <div className="text-center mt-20">

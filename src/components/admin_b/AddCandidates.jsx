@@ -20,7 +20,7 @@ const AddCandidates = () => {
 
   const [remainingTime, setRemainingTime] = useState(null);
 
-  // ✅ Hook to get election timing
+  //  Hook to get election timing
   const { isNominationPeriod, status, loading } = useElectionStatus();
 
   const handleOnChange = (name, value) => {
@@ -80,7 +80,7 @@ const AddCandidates = () => {
 
   const navigate = useNavigate();
 
-  // ✅ Timer Logic
+  //  Timer Logic
   useEffect(() => {
     let timer;
     const fetchTimer = async () => {
